@@ -141,7 +141,6 @@ namespace tflite {
 
 			// Modify this to accept more than 1 node
 			// For the moment it only stores 1 node's information
-			// This operation fails for dense layer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			switch (options_.builtin_code)
 			{
 			case kTfLiteBuiltinConv2d: {
@@ -150,16 +149,20 @@ namespace tflite {
 
 				//custom_logger::LogTfLiteConvParams(conv_params_);
 				//custom_logger::conv::LogTfLiteOpData(operation_data_conv_);
-			}
 				break;
+			}
+			case kTfLiteBuiltinDepthwiseConv2d: {
+				break;
+
+			}
 			case kTfLiteBuiltinFullyConnected: {
 				GetFullyOperationData(*reinterpret_cast<custom_ops::fully_connected::OpData*>(delegated_node->user_data));
 				GetFullyParams(*reinterpret_cast<TfLiteFullyConnectedParams*>(delegated_node->builtin_data));
 
 				//custom_logger::LogTfLiteFullyConnectedParams(fully_params_);
 				//custom_logger::fully_connected::LogTfLiteOpData(operation_data_fully_);
-			}
 				break;
+			}
 			default:
 				break;
 			}
@@ -478,7 +481,7 @@ namespace tflite {
 		}
 
 #if LOGGER
-		/*std::cout << "Special logging!\n";*/
+		//std::cout << "Special logging!\n";
 		//custom_logger::LogTfLiteContext(context);
 		//std::cout << "New node: " << std::endl;
 		//std::cout << "Memory address of node: " << reinterpret_cast<void*>(node) << std::endl;
@@ -677,9 +680,11 @@ namespace tflite {
 		// Checking the TfLiteRegistration
 		// Only supports 2D convolution operations.
 #if LOGGER
-		//std::cout << "Registration type: " << custom_logger::get_builtin_code(registration->builtin_code) << "\n";
+		std::cout << "Registration type: " << custom_logger::get_builtin_code(registration->builtin_code) << "\n";
 #endif // LOGGER
-		if (registration->builtin_code != kTfLiteBuiltinConv2d && registration->builtin_code != kTfLiteBuiltinFullyConnected)
+		if (registration->builtin_code != kTfLiteBuiltinConv2d && 
+			//registration->builtin_code != kTfLiteBuiltinDepthwiseConv2d && 
+			registration->builtin_code != kTfLiteBuiltinFullyConnected)
 			return false;
 		
 		// Checking the TfLiteNode inputs type
@@ -751,6 +756,7 @@ namespace tflite {
 		}
 #if LOGGER
 		std::cout << "Delegate type accepted!" << std::endl;
+		std::cout << "Kernel tensor name: " << kernel_tensor.name << "\n";
 		//std::cout << std::endl << "Variables in MyDelegate::IsNodeSupportedByDelegate" << std::endl;
 		//std::cout << "Masked value " << +*(tensor_ptr + random_position) << std::endl;
 		//custom_logger::LogTfLiteRegistration(registration);

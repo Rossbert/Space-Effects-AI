@@ -63,7 +63,7 @@ namespace tflite {
 				std::cout << "Input offset index: " << data->input_offset_index << std::endl;
 				std::cout << "Row sums index: " << data->row_sums_index << std::endl;
 				std::cout << "Need hwcn weights: " << ((data->need_hwcn_weights) ? "true" : "false") << std::endl;
-				std::cout << "Have weights been transpoded: " << ((data->have_weights_been_transposed) ? "true" : "false") << std::endl;
+				std::cout << "Have weights been transposed: " << ((data->have_weights_been_transposed) ? "true" : "false") << std::endl;
 				std::cout << "Need Im2Col: " << ((data->need_im2col) ? "true" : "false") << std::endl;
 				std::cout << "Im2Col ovsersized: " << ((data->im2col_oversized) ? "true" : "false") << std::endl;
 				std::cout << "Supports multithreaded kernel: " << ((data->supports_multithreaded_kernel) ? "true" : "false") << std::endl;

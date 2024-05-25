@@ -503,6 +503,7 @@ namespace tflite {
 												//if (dataset_index == 0)
 												//{
 												//	std::cout << "Index counter " << idx_counter << "\n";
+												//	std::cout << "Result: " << result << "\n";
 												//}
 												//lock.unlock();
 												std::bitset<32> bits(result);
@@ -573,13 +574,13 @@ namespace tflite {
 					const int end = std::min(start + options.chunk_size, options.channels);
 
 #if LOGGER
-					//if (dataset_index == 2)
+					//if (options.dataset_index == 2)
 					//{
 					//	std::cout << "Indexes size " << options.chunks_indexes.size() << "\n";
 					//	std::cout << "Indexes capacity " << options.chunks_indexes.capacity() << "\n";
 					//	std::cout << "Start: " << start << " End: " << end << "\n";
 					//	std::cout << "Indexes in chunk " << i << ": ";
-					//	for (const auto& val : options.chunks_indexes[dataset_index][i])
+					//	for (const auto& val : options.chunks_indexes[options.dataset_index][i])
 					//	{
 					//		std::cout << val << " ";
 					//	}
@@ -587,7 +588,7 @@ namespace tflite {
 					//}
 					
 					//std::cout << "Real positions\n";
-					//for (const auto& val : options.error_vec_positions[dataset_index])
+					//for (const auto& val : options.error_vec_positions[options.dataset_index])
 					//{
 					//	for (const int& element : val.first)
 					//	{
@@ -603,6 +604,7 @@ namespace tflite {
 					//std::cout << "\n";
 #endif // LOGGER
 
+					// It is possible to pass the mutex as reference
 					threadPool.emplace_back(
 						DisturbedConvolutionOperationByChunks,
 						start, end,

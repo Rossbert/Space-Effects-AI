@@ -65,21 +65,24 @@ def load_and_preprocess_image(image_path):
     return image
 
 # Función para realizar predicciones con el modelo TensorFlow Lite
-def predict_with_tflite(interpreter: tf.lite.Interpreter, dataset, dataset_labels: npt.NDArray):
+def predict_with_tflite(interpreter: tf.lite.Interpreter, dataset, dataset_labels: npt.NDArray, output_scale: float | None = None):
     input_index = input_details[0]['index']
     output_index = output_details[0]['index']
     
     predicted_categories = []
     outputs = []
     for batch in dataset:
-        batch = batch.numpy()  # Convertir el batch a numpy array
+        batch = batch.numpy()
         interpreter.set_tensor(input_index, batch)
         interpreter.invoke()
         output = interpreter.get_tensor(output_index)
-
-        outputs.append(output[0]*output_scale)
         category = np.argmax(output[0])
-        # print(category)
+
+        if output_scale is not None:
+            output = output[0]*output_scale
+        else:
+            output = output[0]
+        outputs.append(output)
         predicted_categories.append(category)
 
     # Compare prediction results with ground truth labels to calculate accuracy.
@@ -109,16 +112,13 @@ if not os.path.exists(OUTPUTS_DIR):
 # Interpreter creation
 interpreter = tf.lite.Interpreter(model_path = TFLITE_PATH)
 interpreter.allocate_tensors()
-# print(interpreter.get_input_details())
-# print(interpreter.get_tensor_details())
-# print(interpreter.get_output_details())
 
+# Set the seed for reproducibility
+random.seed(10)
 # Image dataset creation
 image_paths = [os.path.join(IMAGE_DIR, fname) for fname in os.listdir(IMAGE_DIR) if fname.endswith('.JPEG')]
 dataset_size = len(image_paths)
 sample_size = 1000
-# Set the seed for reproducibility
-random.seed(10)
 # Generate random numbers from 0 to 49999 without repetition
 sample_indexes = random.sample(range(dataset_size), sample_size)
 # Get sample paths
@@ -131,11 +131,6 @@ dataset = dataset.map(load_and_preprocess_image)
 # Si necesitas convertir el dataset a un formato compatible con TensorFlow Lite (por ejemplo, un batch de imágenes)
 batch_size = 1
 dataset = dataset.batch(batch_size)
-# Displaying the images in the dataset
-# for image in dataset.take(5):
-#     plt.imshow(image.numpy())
-#     plt.axis('off')
-#     plt.show()
 
 # Labels creation
 special_sort_array = np.loadtxt(TRUE_LABELS, dtype = int)
@@ -150,25 +145,17 @@ full_set_labels = merged_df['Matched index'].to_numpy()
 # merged_df.to_csv("./out.csv", sep = ';', index = False)
 dataset_labels = np.array([full_set_labels[i] for i in sample_indexes])
 
-
-# Guardar un lote de imágenes para verificar
-for batch in dataset.take(1):
-    print(batch.shape)  # Debería ser (batch_size, 300, 300, 3)
-
 # Obtener detalles de entrada y salida
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
-
 output_scale = output_details[0]['quantization_parameters']['scales'][0]
-print(output_scale)
 
 # Realizar predicciones con el modelo TensorFlow Lite
 evaluation_time = time.time()
-predict_with_tflite(interpreter, dataset, dataset_labels)
+predict_with_tflite(interpreter, dataset, dataset_labels, output_scale = output_scale)
 print(f"Evaluation time {time.time() - evaluation_time:.3f} seconds")
 
 # Evaluate the custom delegate model
-
 bit_position = 31
 number_flips = 100
 layer_name = LAYERS[0]
@@ -189,5 +176,5 @@ new_interpreter.allocate_tensors()
 
 # Realizar predicciones con el modelo TensorFlow Lite
 evaluation_time = time.time()
-predict_with_tflite(new_interpreter, dataset, dataset_labels)
+predict_with_tflite(new_interpreter, dataset, dataset_labels, output_scale = output_scale)
 print(f"Evaluation time {time.time() - evaluation_time:.3f} seconds")

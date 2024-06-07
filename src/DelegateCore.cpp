@@ -680,7 +680,7 @@ namespace tflite {
 		// Checking the TfLiteRegistration
 		// Only supports 2D convolution operations.
 #if LOGGER
-		std::cout << "Registration type: " << custom_logger::get_builtin_code(registration->builtin_code) << "\n";
+		//std::cout << "Registration type: " << custom_logger::get_builtin_code(registration->builtin_code) << "\n";
 #endif // LOGGER
 		if (registration->builtin_code != kTfLiteBuiltinConv2d && 
 			//registration->builtin_code != kTfLiteBuiltinDepthwiseConv2d && 

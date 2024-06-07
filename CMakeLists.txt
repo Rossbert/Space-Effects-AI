@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(custom_delegates)
 
-set(TENSORFLOW_SRC "C:/Users/rosal/tensorflow\ source/tensorflow_src")
-set(TENSORFLOW_BUILD "C:/Users/rosal/tensorflow\ source/tflite_c_build")
+set(TENSORFLOW_SRC "C:/Users/rosal/Documents/Files/Master\ Project/tensorflow_src")
+set(TENSORFLOW_BUILD "C:/Users/rosal/Documents/Files/Master\ Project/tflite-v2.15.0")
 
 # Set configurations
 set(CMAKE_CONFIGURATION_TYPES "Release;Test" CACHE STRING "Configs" FORCE)

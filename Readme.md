@@ -29,14 +29,14 @@ Standarize everything to:
 v2.14.0 (closer) 4dacf3f368eb7965e9b5c3bbdd5193986081c3b2
 Merge pull request #61943 from georgiyekkert/r2.14
 
-# Add this inside CMakeLists.txt
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  # See https://github.com/tensorflow/tensorflow/blob/\
-  # 2b96f3662bd776e277f86997659e61046b56c315/tensorflow/lite/tools/make/\
-  # Makefile#L157
-  set(_TFLITE_ENABLE_MMAP OFF)
-  add_compile_definitions(TFLITE_MMAP_DISABLED) # This line!
-endif()
+# Add this inside tensorflow/lite/CMakeLists.txt in line 110
+096 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+097   # See https://github.com/tensorflow/tensorflow/blob/\
+098   # 2b96f3662bd776e277f86997659e61046b56c315/tensorflow/lite/tools/make/\
+099   # Makefile#L157
+100   set(_TFLITE_ENABLE_MMAP OFF)
+      add_compile_definitions(TFLITE_MMAP_DISABLED) # This line!
+101 endif()
 
 
 # Anotations for new model to be used

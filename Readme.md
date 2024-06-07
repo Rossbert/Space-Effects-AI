@@ -1,6 +1,24 @@
-# Create your own Tensor Flow Lite delegate to affect weights and convolution
+# Space Effect AI project v1.0.0 usage
+## Create your own Tensor Flow Lite delegate to affect weights and convolution
 
 This repository will give you the basic source code to compile a Tensor Flow Lite Delegate to simulate random bit flipping in the weights and during the convolution multiplication.
+## Prerequisites
+
+###
+    Python v3.10.4
+    Tensorflow python package v2.11.0
+    Tensorflow Lite v2.15.0 built library (Refer to the Readme Prerequisited.md for details)
+    VisualStudio 17 2022 (Windows only, recommended)
+
+### Install Python
+
+Python v3.10.4 is required for the project to work, feel free to choose the installation method.
+
+### Install Tensorflow 
+Install the version 2.11.0 using pip
+```bash
+pip install tensorflow==2.11.0
+```
 
 ## Tensor Flow Delegate compilation
 
